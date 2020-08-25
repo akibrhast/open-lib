@@ -14,7 +14,11 @@
         <tr>
             <th scope="row">{{loop.index}}</th>
             <td>{{book.name}}</td>
-            <td><a href="{{url_for('read',book_url=loop.index0)}}">Read {{book.name}} </a></td>
+            <td><a href="{{url_for('read',book_url=loop.index0)}}">
+              
+              <img width="150" height="70" src="https://www.rd.com/wp-content/uploads/2019/12/book-e1576790089347.jpg">
+               </a></td>
+
         </tr>
         {%endfor%}
 
