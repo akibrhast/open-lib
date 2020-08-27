@@ -4,3 +4,4 @@ env
 activate.bat
 __pycache__
 .vs
+.zip
