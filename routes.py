@@ -28,7 +28,7 @@ migrate = Migrate(app, db)
 
 
 
-#id | title | series | series_position | author | img_url | key | e_tag
+#id | title | series | series_position | author | img_url | object_key | e_tag
 class Books(db.Model):
     __tablename__ = 'books'
 
@@ -64,7 +64,7 @@ class Books(db.Model):
 def index():
     #books = Books.query.all()
     books = Books.query.order_by(Books.author).all()
-    print(Books.query.order_by(Books.author).all())
+
     return render_template("home.html",books=books)
 
 
