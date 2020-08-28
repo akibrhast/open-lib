@@ -1,0 +1,34 @@
+{%extends "base.html"%}
+
+{%block body_container%}
+
+<div class="accordion" id="book-accordion">
+  {%for author in authors%}
+  <div class="card">
+    <div class="card-header" id="heading{{loop.index}}">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{loop.index}}" aria-expanded="true" aria-controls="#collapse{{loop.index}}">
+          {{author}}
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapse{{loop.index}}" class="collapse hide" aria-labelledby="heading{{loop.index}}" data-parent="#book-accordion">
+      <div class="card-body">
+        {%for book in books%}
+        <ul class="list-group list-group-flush">
+          {%if author in book.author%}
+          <a href="{{url_for('read',book_id=book.id)}}" class="list-group-item list-group-item-action list-group-item-dark">{{book.title}}</a>
+          {%endif%}
+        </ul>
+
+        {%endfor%}
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+
+
+
+{%endblock body_container%}
