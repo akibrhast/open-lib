@@ -1,5 +1,5 @@
 
-from app import db, login
+from app import db
 
 #id | title | series | series_position | author | img_url | object_key | e_tag
 class Books(db.Model):

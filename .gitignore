@@ -5,3 +5,4 @@ activate.bat
 __pycache__
 .vs
 .zip
+config.txt
