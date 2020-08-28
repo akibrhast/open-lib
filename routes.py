@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import itertools 
 
 
 import boto3
@@ -64,8 +65,8 @@ class Books(db.Model):
 def index():
     #books = Books.query.all()
     books = Books.query.order_by(Books.author).all()
-
-    return render_template("home.html",books=books)
+    authors = set(book.author for book in books)
+    return render_template("home.html",books=books,authors=authors)
 
 
 @app.route("/read/<book_id>")
