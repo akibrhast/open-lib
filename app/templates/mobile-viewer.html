@@ -47,11 +47,14 @@ limitations under the License.
 </head>
 
 <body tabindex="1">
-    <meta id="book_url"  data-url='{{awsUrl}}'>
-    <meta id="save_page_url" data_url='{{url_for("save_page")}}'>
+    <meta id="book_url"      data-url='{{awsUrl}}'>
+    <meta id="book_id"       data-url='{{bookId}}'>
+    <meta id="page_number"   data-url='{{pageNumber}}'>
+    <meta id="save_page_url" data-url='{{url_for("save_page")}}'>
+
     <header>
         <h1 id="title"></h1>
-      </header>
+    </header>
   
       <div id="viewerContainer">
         <div id="viewer" class="pdfViewer"></div>
