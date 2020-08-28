@@ -20,19 +20,22 @@ def index():
 
 @app.route("/read/<book_id>")
 def read(book_id):
-    book = Books.query.get(book_id)
+    book = Books.query.filter_by(id=book_id).first_or_404()
+    print(book.page_number)
+
     s3Client = boto3.client('s3',
                             aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
                             aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
     url = s3Client.generate_presigned_url(ClientMethod='get_object',
                                             Params={'Bucket': 'books2020', 'Key': book.object_key},
                                             ExpiresIn=600)
-    return render_template("mobile-viewer.html",awsUrl = url)
+    return render_template("mobile-viewer.html",awsUrl = url,bookId=book_id,pageNumber = book.page_number)
 
 @app.route("/save_page", methods=['POST'])
 def save_page():
-
-    print(request.data)
+    book = Books.query.filter_by(id=int(request.get_json()['book_id'])).first_or_404()
+    book.page_number = int(request.get_json()['page_number'])
+    db.session.commit()
     return {"status":"Successfully Saved"}
 
 if __name__ == '__main__':

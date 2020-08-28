@@ -403,9 +403,11 @@ var PDFViewerApplication = {
         }
       });
 
-    eventBus.on("pagesinit", function () {
+    eventBus.on("pagesinit", function (evt) {
       // We can use pdfViewer now, e.g. let's change default scale.
       pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
+      pdfViewer.currentPageNumber = parseInt( $('#page_number').attr("data-url") )
+      
     });
 
     eventBus.on(
@@ -434,7 +436,7 @@ var PDFViewerApplication = {
           });
           return response.json(); // parses JSON response into native JavaScript objects
         }
-        postData( "/save_page", { page_number: page })
+        postData( "/save_page", { page_number: page,book_id:$('#book_id').attr("data-url") })
             .then(data => {
               console.log(data); // JSON data parsed by `data.json()` call
             });
