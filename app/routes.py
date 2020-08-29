@@ -18,10 +18,11 @@ def index():
     return render_template("home.html",books=books,authors=authors)
 
 
-@app.route("/read/<book_id>")
-def read(book_id):
+@app.route("/read")
+def read():
+    book_id = request.args.get("book_id")
     book = Books.query.filter_by(id=book_id).first_or_404()
-    print(book.page_number)
+   
 
     s3Client = boto3.client('s3',
                             aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
@@ -29,7 +30,9 @@ def read(book_id):
     url = s3Client.generate_presigned_url(ClientMethod='get_object',
                                             Params={'Bucket': 'books2020', 'Key': book.object_key},
                                             ExpiresIn=600)
-    return render_template("mobile-viewer.html",awsUrl = url,bookId=book_id,pageNumber = book.page_number)
+    
+    return render_template("web/viewer.html",awsUrl=url,bookId=book_id,pageNumber = book.page_number)
+    #return render_template("mobile-viewer.html",awsUrl = url,bookId=book_id,pageNumber = book.page_number)
 
 @app.route("/save_page", methods=['POST'])
 def save_page():
@@ -38,6 +41,25 @@ def save_page():
     db.session.commit()
     return {"status":"Successfully Saved"}
 
+
+
+@app.route("/pdfwebdemo")
+def pdfwebdemo():
+
+    try:
+        book = Books.query.filter_by(id=1).first_or_404()
+    except Exception as e:
+        print(e)
+    s3Client = boto3.client('s3',
+                            aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
+                            aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
+    url = s3Client.generate_presigned_url(ClientMethod='get_object',
+                                            Params={'Bucket': 'books2020', 'Key': book.object_key},
+                                            ExpiresIn=600)
+
+    return render_template("web/viewer.html",awsUrl=url)
+
+    
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
     app.run(host='0.0.0.0',debug=True)
