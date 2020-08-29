@@ -23,6 +23,9 @@
 
   <script src="{{url_for('static',filename='web/viewer.js')}}"></script>
   <meta id="book_url"      data-url='{{awsUrl}}'>
+  <meta id="book_id"       data-url='{{bookId}}'>
+  <meta id="page_number"   data-url='{{pageNumber}}'>
+  <meta id="save_page_url" data-url='{{url_for("save_page")}}'>
   </head>
 
   <body tabindex="1" class="loadingInProgress">

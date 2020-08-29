@@ -418,7 +418,7 @@ var PDFViewerApplication = {
         
 
 
-                // Example POST method implementation:
+        // Example POST method implementation:
         async function postData(url = '', data = {}) {
           // Default options are marked with *
           const response = await fetch(url, {

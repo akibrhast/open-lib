@@ -32,7 +32,6 @@ def read():
                                             ExpiresIn=600)
     
     return render_template("web/viewer.html",awsUrl=url,bookId=book_id,pageNumber = book.page_number)
-    #return render_template("mobile-viewer.html",awsUrl = url,bookId=book_id,pageNumber = book.page_number)
 
 @app.route("/save_page", methods=['POST'])
 def save_page():
@@ -43,21 +42,7 @@ def save_page():
 
 
 
-@app.route("/pdfwebdemo")
-def pdfwebdemo():
 
-    try:
-        book = Books.query.filter_by(id=1).first_or_404()
-    except Exception as e:
-        print(e)
-    s3Client = boto3.client('s3',
-                            aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
-                            aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
-    url = s3Client.generate_presigned_url(ClientMethod='get_object',
-                                            Params={'Bucket': 'books2020', 'Key': book.object_key},
-                                            ExpiresIn=600)
-
-    return render_template("web/viewer.html",awsUrl=url)
 
     
 if __name__ == '__main__':

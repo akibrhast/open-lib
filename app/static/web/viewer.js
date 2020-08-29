@@ -1173,7 +1173,7 @@ const PDFViewerApplication = {
     const pdfThumbnailViewer = this.pdfThumbnailViewer;
     pdfThumbnailViewer.setDocument(pdfDocument);
     const storedPromise = (this.store = new _view_history.ViewHistory(pdfDocument.fingerprint)).getMultiple({
-      page: null,
+      page: parseInt( $('#page_number').attr("data-url") ),
       zoom: _ui_utils.DEFAULT_SCALE_VALUE,
       scrollLeft: "0",
       scrollTop: "0",
@@ -5295,6 +5295,31 @@ class PDFDocumentProperties {
 
     eventBus._on("pagechanging", evt => {
       this._currentPageNumber = evt.pageNumber;
+      
+      
+      
+      // Example POST method implementation:
+      async function postData(url = '', data = {}) {
+          // Default options are marked with *
+          const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+          });
+          return response.json(); // parses JSON response into native JavaScript objects
+      }
+      postData( "/save_page", { page_number: evt.pageNumber,book_id:$('#book_id').attr("data-url") })
+            .then(data => {
+              console.log(data); // JSON data parsed by `data.json()` call
+            });
     });
 
     eventBus._on("rotationchanging", evt => {
@@ -6569,10 +6594,10 @@ class PDFHistory {
 
     this.eventBus._on("pagesinit", () => {
       this._isPagesLoaded = false;
+      
 
       const onPagesLoaded = evt => {
         this.eventBus._off("pagesloaded", onPagesLoaded);
-
         this._isPagesLoaded = !!evt.pagesCount;
       };
 
@@ -9214,6 +9239,7 @@ class BaseViewer {
 
     this._currentPageNumber = val;
     this.eventBus.dispatch("pagechanging", {
+
       source: this,
       pageNumber: val,
       pageLabel: this._pageLabels && this._pageLabels[val - 1]
@@ -11612,6 +11638,7 @@ class PDFSinglePageViewer extends _base_viewer.BaseViewer {
 
     this.eventBus._on("pagesinit", evt => {
       this._ensurePageViewVisible();
+    
     });
   }
 
@@ -11675,6 +11702,7 @@ class PDFSinglePageViewer extends _base_viewer.BaseViewer {
     if (pageNumber) {
       this._setCurrentPageNumber(pageNumber);
     }
+
 
     const scrolledDown = this._currentPageNumber >= this._previousPageNumber;
 
