@@ -1356,17 +1356,17 @@ const PDFViewerApplication = {
     let pdfTitle;
     const infoTitle = info && info.Title;
 
-    if (infoTitle) {
-      pdfTitle = infoTitle;
-    }
+    // if (infoTitle) {
+    //   pdfTitle = infoTitle;
+    // }
 
-    const metadataTitle = metadata && metadata.get("dc:title");
+    // const metadataTitle = metadata && metadata.get("dc:title");
 
-    if (metadataTitle) {
-      if (metadataTitle !== "Untitled" && !/[\uFFF0-\uFFFF]/g.test(metadataTitle)) {
-        pdfTitle = metadataTitle;
-      }
-    }
+    // if (metadataTitle) {
+    //   if (metadataTitle !== "Untitled" && !/[\uFFF0-\uFFFF]/g.test(metadataTitle)) {
+    //     pdfTitle = metadataTitle;
+    //   }
+    // }
 
     if (pdfTitle) {
       this.setTitle(`${pdfTitle} - ${contentDispositionFilename || document.title}`);

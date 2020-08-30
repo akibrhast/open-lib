@@ -15,10 +15,11 @@
 
     <div id="collapse{{loop.index}}" class="collapse hide" aria-labelledby="heading{{loop.index}}" data-parent="#book-accordion">
       <div class="card-body">
-        {%for book in books%}
+        {%for book in books %}
         <ul class="list-group list-group-flush">
           {%if author in book.author%}
-          <a href="{{url_for('read',book_id=book.id)}}" class="list-group-item list-group-item-action list-group-item-dark">{{book.title}}</a>
+
+          <a href="{{url_for('read',object_key=book.object_key,page_number=book.page_number,book_id=book.id)}}" class="list-group-item list-group-item-action list-group-item-dark">{{book.title|replace('.pdf','')}} | {{book.series}} | Book - {{book.series_position}}</a>
           {%endif%}
         </ul>
 
