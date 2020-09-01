@@ -1,6 +1,7 @@
 from app import app, db
 from app.models import Books
 from app import Config
+import pandas as pd
 
 
 from flask import  flash, redirect, render_template, request, session, abort,url_for
@@ -12,28 +13,51 @@ s3Client = boto3.client('s3',
                         aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
                         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
 
+def create_template_ready_dict(df):
+    d={}
+    for i in set(df.author):
+        d[i]={}
+        df2=df[df.author==i]
+        for k in set(df2.series):
+            d[i][k]=[]
+            df3=df2[df2.series==k]
+            for j in range(len(df3)):
+                d[i][k].append({'title':df3['title'].iloc[j], 
+                                'series_position':df3['series_position'].iloc[j],
+                                'page_number':df3['page_number'].iloc[j],
+                                'id':df3['id'].iloc[j],
+                                'object_key':df3['object_key'].iloc[j]
+                                })
+    for key0,value0 in d.items():
+        for key1,value1 in value0.items():       
+            value1 = sorted(value1, key = lambda i: i['series_position'])
+            d[key0][key1] = value1
+    return d
+
 
 @app.route('/')
 def index():
-    books = Books.query.order_by(Books.author).all()
-    authors = sorted(set(book.author for book in books))
+    df = pd.read_sql("""SELECT 
+                            id,author,series,series_position,title,page_number,object_key 
+                        FROM 
+                            books
+                    """, db.session.bind)
+    d = create_template_ready_dict(df)
 
-    return render_template("home.html",books=books,authors=authors)
+    return render_template("home.html",mydf=d)
 
 
 @app.route("/read")
 def read():
-    object_key = request.args.get("object_key")
-    page_number = request.args.get("page_number")
-    book_id = request.args.get("book_id")
-   
-
-
     url = s3Client.generate_presigned_url(ClientMethod='get_object',
-                                          Params={'Bucket': 'books2020', 'Key': object_key},
+                                          Params={'Bucket': 'books2020', 'Key': request.args.get('object_key')},
                                           ExpiresIn=600)
     
-    return render_template("web/viewer.html",awsUrl=url,pageNumber = page_number,bookId=book_id)
+    return render_template("web/viewer.html",
+                            awsUrl=url,
+                            pageNumber = request.args.get('getpage_number'),
+                            bookId=request.args.get('id')
+                            )
 
 @app.route("/save_page", methods=['POST'])
 def save_page():
