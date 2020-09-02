@@ -1,7 +1,6 @@
 from app import app, db
 from app.models import Books
 from app import Config
-import pandas as pd
 
 
 from flask import  flash, redirect, render_template, request, session, abort,url_for
