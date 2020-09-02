@@ -1,0 +1,49 @@
+<div class="accordion" id="book-accordion">
+    {%for item in mydf|dictsort%}
+      <div class="card">
+        <div class="card-header" id="heading{{loop.index}}">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{loop.index}}" aria-expanded="true" aria-controls="#collapse{{loop.index}}">
+              {{item[0]}}
+            </button>
+          </h2>
+        </div>
+  
+        <div id="collapse{{loop.index}}" class="collapse hide" aria-labelledby="heading{{loop.index}}" data-parent="#book-accordion">
+          <div class="card-body">
+            <!-- inner list for series -->
+            <div class="accordion" id="book-accordion-inner">
+              {%for series,values in item[1].items()%}
+              <div class="card">
+                <div class="card-header" id="heading{{loop.index}}-inner">
+                  <h2 class="mb-0">
+                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{loop.index}}-inner" aria-expanded="true" aria-controls="#collapse{{loop.index}}-inner">
+                      {{series}}
+                    </button>
+                  </h2>
+                </div>
+            
+                <div id="collapse{{loop.index}}-inner" class="collapse hide" aria-labelledby="heading{{loop.index}}-inner" data-parent="#book-accordion-inner">
+                  <div class="card-body">
+                    <!-- inner list for books -->
+  
+                    <ul class="list-group list-group-flush">
+                      {%for x in values|sort(attribute="series_position")%}
+                        <a href="{{url_for('read',**x)}}" 
+                          class="list-group-item list-group-item-action list-group-item-dark"
+                        >
+                          {{x['series_position']}}. {{x['title']}}
+                        </a>
+                      {%endfor%}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {%endfor%}
+            </div>          
+          </div>
+        </div>
+      </div>
+    {%endfor%}
+  </div>
+<script> var a = {{mydf|tojson}}</script>
