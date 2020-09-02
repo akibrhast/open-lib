@@ -33,6 +33,7 @@ def create_template_ready_dict(books):
 @app.route('/')
 def index():
     books = Books.query.order_by(Books.author).all()
+    x_rat = {"1":"hi", "2":"red","3":"foo"}
     return render_template("home.html",mydf=create_template_ready_dict(books))
 
 
