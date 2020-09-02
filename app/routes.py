@@ -13,38 +13,28 @@ s3Client = boto3.client('s3',
                         aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
                         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
 
-def create_template_ready_dict(df):
-    d={}
-    for i in set(df.author):
-        d[i]={}
-        df2=df[df.author==i]
-        for k in set(df2.series):
-            d[i][k]=[]
-            df3=df2[df2.series==k]
-            for j in range(len(df3)):
-                d[i][k].append({'title':df3['title'].iloc[j], 
-                                'series_position':df3['series_position'].iloc[j],
-                                'page_number':df3['page_number'].iloc[j],
-                                'id':df3['id'].iloc[j],
-                                'object_key':df3['object_key'].iloc[j]
+def create_template_ready_dict(books):
+    n={}
+    for i in set([book.author for book in books]):
+        n[i] = {}
+        books2= [book for book in books if book.author==i]
+        for k in set([book.series for book in books2]):
+            n[i][k] = []
+            books3 = [book for book in books2 if book.series==k]
+            for j in books3:
+                n[i][k].append({'title':j.title, 
+                                'series_position':j.series_position,
+                                'page_number':j.page_number,
+                                'id':j.id,
+                                'object_key':j.object_key
                                 })
-    for key0,value0 in d.items():
-        for key1,value1 in value0.items():       
-            value1 = sorted(value1, key = lambda i: i['series_position'])
-            d[key0][key1] = value1
-    return d
+    return n
 
 
 @app.route('/')
 def index():
-    df = pd.read_sql("""SELECT 
-                            id,author,series,series_position,title,page_number,object_key 
-                        FROM 
-                            books
-                    """, db.session.bind)
-    d = create_template_ready_dict(df)
-
-    return render_template("home.html",mydf=d)
+    books = Books.query.order_by(Books.author).all()
+    return render_template("home.html",mydf=create_template_ready_dict(books))
 
 
 @app.route("/read")
@@ -55,7 +45,7 @@ def read():
     
     return render_template("web/viewer.html",
                             awsUrl=url,
-                            pageNumber = request.args.get('getpage_number'),
+                            pageNumber = request.args.get('page_number'),
                             bookId=request.args.get('id')
                             )
 

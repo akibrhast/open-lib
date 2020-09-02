@@ -28,9 +28,10 @@
                     <!-- inner list for books -->
   
                     <ul class="list-group list-group-flush">
-                      {%for x in values%}
+                      {%for x in values|sort(attribute="series_position")%}
                         <a href="{{url_for('read',**x)}}" 
-                          class="list-group-item list-group-item-action list-group-item-dark">
+                          class="list-group-item list-group-item-action list-group-item-dark"
+                        >
                           {{x['series_position']}}. {{x['title']}}
                         </a>
                       {%endfor%}
@@ -45,3 +46,4 @@
       </div>
     {%endfor%}
   </div>
+<script> var a = {{mydf|tojson}}</script>
