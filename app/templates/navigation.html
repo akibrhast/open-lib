@@ -1,0 +1,40 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Open Lib 1.0</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="navbar-nav"></li>
+        <li class="navbar-nav">
+          <a class="nav-link" href="#" id="navbar-changelayout">  <img width="30px" height="30px"  src="{{url_for('static',filename='images/layer.svg')}}" /></a>
+          </li>
+
+      </ul>
+
+      <form class="form-inline my-2 my-lg-0">
+        <input 
+        class="form-control mr-sm-2" 
+        type="search" 
+        placeholder="Search" 
+        aria-label="Search"
+        id="navbar-search"
+        >
+
+      </form>
+
+  </div>
+</nav>
+<script src="{{url_for('static',filename='js/search.js')}}" ></script>
+<script src="{{url_for('static',filename='js/changelayout.js')}}" ></script>
+
+  
+
+
+  <!-- Spinnger for when search is loading -->
+  <!-- <div class="spinner-border m-5" role="status">
+    <span class="sr-only">Loading...</span>
+  </div> -->
