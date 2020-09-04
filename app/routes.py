@@ -62,7 +62,11 @@ def save_page():
                                 )
     '''
     
-
+@app.route("/search",methods=['POST'])
+def search():
+    
+    return request.get_json()
+    
 
 
 

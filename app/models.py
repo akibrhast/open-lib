@@ -27,7 +27,6 @@ class Books(db.Model):
     
 
     def __repr__(self):
-
         
         return f"<id: {self.id},title: {self.title},key: {self.object_key},author: {self.author}>"
 
