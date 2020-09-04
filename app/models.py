@@ -1,6 +1,6 @@
 
 from app import db
-
+#xd.__table__.create(db.session.bind)
 #id | title | series | series_position | author | img_url | object_key | e_tag | page_number
 class Books(db.Model):
     __tablename__ = 'books'
@@ -30,5 +30,4 @@ class Books(db.Model):
 
         
         return f"<id: {self.id},title: {self.title},key: {self.object_key},author: {self.author}>"
-
 

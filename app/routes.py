@@ -2,7 +2,6 @@ from app import app, db
 from app.models import Books
 from app import Config
 
-
 from flask import  flash, redirect, render_template, request, session, abort,url_for
 import os
 import itertools 
@@ -50,17 +49,19 @@ def read():
 
 @app.route("/save_page", methods=['POST'])
 def save_page():
-    
-    book = Books.query.filter_by(id=int(request.get_json()['book_id'])).first_or_404()
+
+    book = Books.query.filter_by(id=request.get_json()['book_id']).first_or_404()
     book.page_number = int(request.get_json()['page_number'])
     db.session.commit()
+    return {"status":"Successfully Saved"}
+
 
     '''
     result = db.engine.execute(" UPDATE books SET page_number=%s WHERE id=%s",
                                 (int(request.get_json()['page_number']),request.get_json()['book_id'],)
                                 )
     '''
-    return {"status":"Successfully Saved"}
+    
 
 
 
