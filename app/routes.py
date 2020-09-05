@@ -1,12 +1,20 @@
 from app import app, db
-from app.models import Books
+from app.models import Books, User
 from app import Config
+<<<<<<< Updated upstream
 
 
+=======
+import pandas as pd
+from flask_login import current_user, login_user, login_required, logout_user
+>>>>>>> Stashed changes
 from flask import  flash, redirect, render_template, request, session, abort,url_for
 import os
 import itertools 
 import boto3
+from werkzeug.urls import url_parse
+from app.forms import RegistrationForm, LoginForm
+
 
 s3Client = boto3.client('s3',
                         aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
@@ -31,12 +39,51 @@ def create_template_ready_dict(books):
 
 
 @app.route('/')
+@login_required
 def index():
     books = Books.query.order_by(Books.author).all()
     return render_template("home.html",mydf=create_template_ready_dict(books))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid email or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+@login_required
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 @app.route("/read")
+@login_required
 def read():
     url = s3Client.generate_presigned_url(ClientMethod='get_object',
                                           Params={'Bucket': 'books2020', 'Key': request.args.get('object_key')},
