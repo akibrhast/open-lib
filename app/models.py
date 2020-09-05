@@ -1,7 +1,10 @@
 
+
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+
+#xd.__table__.create(db.session.bind)
 
 #id | title | series | series_position | author | img_url | object_key | e_tag | page_number
 class Books(db.Model):
@@ -29,9 +32,9 @@ class Books(db.Model):
     
 
     def __repr__(self):
-
         
         return f"<id: {self.id},title: {self.title},key: {self.object_key},author: {self.author}>"
+
 
 
 class User(UserMixin, db.Model):
@@ -52,3 +55,4 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+

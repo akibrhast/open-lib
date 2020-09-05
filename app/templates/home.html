@@ -1,11 +1,14 @@
 {%extends "base.html"%}
 
+{% block head %}
+    {{super()}}
+    <script> var mydf = {{mydf|tojson}}</script>
+{% endblock head %}
+
+{% block navbar %}
+    {% include "navigation.html" ignore missing with context %}
+{% endblock navbar %}
+
 {%block body_container%}
-
-
-{% include "arrange-by-author-accordion.html" ignore missing with context %}
-
-
-
-
+    {% include "arrange-by-author-accordion.html" ignore missing with context %}
 {%endblock body_container%}
