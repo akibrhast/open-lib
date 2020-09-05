@@ -53,6 +53,7 @@ def save_page():
     book = Books.query.filter_by(id=request.get_json()['book_id']).first_or_404()
     book.page_number = int(request.get_json()['page_number'])
     db.session.commit()
+
     return {"status":"Successfully Saved"}
 
 

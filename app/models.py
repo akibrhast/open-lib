@@ -16,6 +16,7 @@ class Books(db.Model):
     e_tag           = db.Column(db.String())
     page_number     = db.Column(db.Integer())
 
+
     def __init__(self, title, series,series_position,author,img_url,object_key,e_tag):
         self.title  = tile
         self.series = series
