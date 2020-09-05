@@ -5,13 +5,23 @@
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
   </button>
-
+  {% if current_user.is_authenticated %}
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="navbar-nav"></li>
+        
+        <li class="navbar-nav">
+          <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </li>
+
+        <li class="navbar-nav">
+          <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+        </li>
+       
+
+
         <li class="navbar-nav">
           <a class="nav-link" href="#" id="navbar-changelayout">  <img width="30px" height="30px"  src="{{url_for('static',filename='images/layer.svg')}}" /></a>
-          </li>
+        </li>
 
       </ul>
 
@@ -27,6 +37,7 @@
       </form>
 
   </div>
+  {% endif %}
 </nav>
 <script src="{{url_for('static',filename='js/search.js')}}" ></script>
 <script src="{{url_for('static',filename='js/changelayout.js')}}" ></script>

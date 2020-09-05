@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block navbar %}
+    {% include "navigation.html" ignore missing with context %}
+{% endblock navbar %}
 
 {% block body_container %}
     <h1>Register</h1>
