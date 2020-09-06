@@ -10,5 +10,8 @@
 {% endblock navbar %}
 
 {%block body_container%}
+    {% if currently_reading is not none %}
+        {% include "currently_reading.html" ignore missing with context %}
+    {% endif %}
     {% include "arrange-by-author-accordion.html" ignore missing with context %}
 {%endblock body_container%}

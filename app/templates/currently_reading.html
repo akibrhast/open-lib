@@ -1,0 +1,9 @@
+<h6>Recently Read</h6>
+<div class="d-flex flex-row flex-nowrap overflow-auto">
+    {% for book in currently_reading %}
+    <div class="card card-block mx-2" style="min-width: 300px;">{{book.title}}</div>
+    <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+    {% endfor %}
+     
+            
+</div>

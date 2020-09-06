@@ -3,6 +3,7 @@
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 
 #xd.__table__.create(db.session.bind)
 
@@ -57,3 +58,17 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+class CurrentlyReading(db.Model):
+    id          = db.Column(db.Integer, primary_key=True)
+    book_id     = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    page_number = db.Column(db.Integer())
+    date_modified = db.Column(db.DateTime,  default=datetime.now,nullable=False,onupdate = datetime.now)
+    db.UniqueConstraint(book_id, user_id)
+
+    def __init__(self,book_id,user_id,page_number):
+        self.book_id        = book_id
+        self.user_id        = user_id
+        self.page_number    = page_number
+
+    #__table_args__ = (UniqueConstraint('book_id', 'user_id', name='_user_book_uc'),)

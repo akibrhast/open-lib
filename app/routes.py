@@ -1,21 +1,31 @@
-from app import app, db
-from app.models import Books, User
-from app import Config
-
-from flask_login import current_user, login_user, login_required, logout_user
-
-
-from flask import  flash, redirect, render_template, request, session, abort,url_for
-import os
-import itertools 
-import boto3
-from werkzeug.urls import url_parse
+from app import app, db,Config
+from app.models import Books, User,CurrentlyReading
 from app.forms import RegistrationForm, LoginForm
+from flask_login import current_user, login_user, login_required, logout_user
+from flask import  flash, redirect, render_template, request, session, abort,url_for
+import os, itertools ,boto3
+from werkzeug.urls import url_parse
+
 
 
 s3Client = boto3.client('s3',
                         aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
                         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
+
+currently_reading_query = """ 
+                        SELECT 
+                            *
+                        FROM 
+                            books
+                        INNER JOIN 
+                            currently_reading 
+                        ON 
+                            (books.id = currently_reading.book_id) AND (currently_reading.user_id=%s)
+                        ORDER BY
+                            currently_reading.date_modified DESC;
+                        """
+
+
 
 def create_template_ready_dict(books):
     n={}
@@ -39,7 +49,10 @@ def create_template_ready_dict(books):
 @login_required
 def index():
     books = Books.query.order_by(Books.author).all()
-    return render_template("home.html",mydf=create_template_ready_dict(books))
+    currently_reading = db.engine.execute(currently_reading_query,(current_user.id,))
+    return render_template("home.html",
+                            mydf=create_template_ready_dict(books),
+                            currently_reading = currently_reading)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -66,10 +79,9 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
+
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data)
@@ -96,9 +108,16 @@ def read():
 @app.route("/save_page", methods=['POST'])
 def save_page():
 
-    book = Books.query.filter_by(id=request.get_json()['book_id']).first_or_404()
-    book.page_number = int(request.get_json()['page_number'])
+    currently_reading = CurrentlyReading.query.filter_by(user_id = current_user.id,book_id=request.get_json()['book_id']).first()
+    if not currently_reading:
+        currently_reading = CurrentlyReading(user_id = current_user.id,
+                                             book_id=request.get_json()['book_id'],
+                                             page_number=int(request.get_json()['page_number']))
+    else:
+        currently_reading.page_number = int(request.get_json()['page_number'])
+    db.session.add(currently_reading)
     db.session.commit()
+
 
     return {"status":"Successfully Saved"}
 
