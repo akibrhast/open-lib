@@ -14,7 +14,7 @@ s3Client = boto3.client('s3',
 
 currently_reading_query = """ 
                         SELECT 
-                            *
+                            books.id,books.title,books.series,books.series_position,books.author,books.object_key,currently_reading.page_number
                         FROM 
                             books
                         INNER JOIN 
@@ -38,7 +38,6 @@ def create_template_ready_dict(books):
             for j in books3:
                 n[i][k].append({'title':j.title, 
                                 'series_position':j.series_position,
-                                'page_number':j.page_number,
                                 'id':j.id,
                                 'object_key':j.object_key})
     return n
@@ -50,9 +49,11 @@ def create_template_ready_dict(books):
 def index():
     books = Books.query.order_by(Books.author).all()
     currently_reading = db.engine.execute(currently_reading_query,(current_user.id,))
+
+
     return render_template("home.html",
                             mydf=create_template_ready_dict(books),
-                            currently_reading = currently_reading)
+                            currentlyReading = [dict(row) for row in currently_reading])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -101,7 +102,7 @@ def read():
     
     return render_template("web/viewer.html",
                             awsUrl=url,
-                            pageNumber = request.args.get('getpage_number'),
+                            pageNumber = request.args.get('page_number'),
                             bookId=request.args.get('id')
                             )
 

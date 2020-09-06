@@ -18,12 +18,13 @@
     <link rel="icon" 
       type="image/png" 
       href="{{url_for('static',filename='images/Book-03.png')}}" />
-    
+      <link type="text/css" rel="stylesheet" href="{{url_for('static',filename='css/bootstrap_override.css')}}">
+      <link type="text/css" rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
     {%block title%}<title>Open Lib 1.0</title>{%endblock title%}
 
     {%endblock head%}
   </head>
-  <body style="padding-top:70px; padding-bottom: 70px ">
+  <body >
     {%block navbar%}
 
     {%endblock navbar%}

@@ -1,8 +1,13 @@
 <h6>Recently Read</h6>
 <div class="d-flex flex-row flex-nowrap overflow-auto">
-    {% for book in currently_reading %}
-    <div class="card card-block mx-2" style="min-width: 300px;">{{book.title}}</div>
-    <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+    {% for item in currentlyReading %}
+    <!-- <div class="card card-block mx-2" style="min-width: 300px;">{{item.title}}</div> -->
+    <a  href="{{url_for('read',**item)}}" 
+        class="card card-block mx-2 my-2 px-2 overflow-hidden text-white bg-dark"
+        style="min-width: 200px; max-width:300px;"
+    >
+        {{item.title}}({{item.series  }} - {{item.series_position}})
+    </a>
     {% endfor %}
      
             

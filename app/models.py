@@ -20,11 +20,10 @@ class Books(db.Model):
     img_url         = db.Column(db.String())
     object_key      = db.Column(db.String())
     e_tag           = db.Column(db.String())
-    page_number     = db.Column(db.Integer())
 
 
     def __init__(self, title, series,series_position,author,img_url,object_key,e_tag):
-        self.title  = tile
+        self.title  = title
         self.series = series
         self.series_position = series_position
         self.author = author
@@ -71,4 +70,3 @@ class CurrentlyReading(db.Model):
         self.user_id        = user_id
         self.page_number    = page_number
 
-    #__table_args__ = (UniqueConstraint('book_id', 'user_id', name='_user_book_uc'),)
