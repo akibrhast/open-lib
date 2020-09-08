@@ -44,12 +44,14 @@ def create_template_ready_dict(books):
 
 
 
-@app.route('/')
+@app.route('/',methods=['GET', 'POST'])
 @login_required
 def index():
+
     books = Books.query.order_by(Books.author).all()
     currently_reading = db.engine.execute(currently_reading_query,(current_user.id,))
-
+    # if request.method == 'POST':
+    #     return render_template("series_layout.html",mydf2=create_template_ready_dict(books))
 
     return render_template("home.html",
                             mydf=create_template_ready_dict(books),
