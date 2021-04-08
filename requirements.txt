@@ -28,7 +28,7 @@ mccabe==0.6.1
 numpy==1.19.1
 pandas==1.1.1
 pdfreader==0.1.4
-Pillow==7.2.0
+Pillow==8.2.0
 psycopg2==2.8.5
 pylint==2.6.0
 python-dateutil==2.8.1
